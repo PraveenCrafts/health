@@ -1,0 +1,212 @@
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --success-color: #4CAF50;
+    --danger-color: #f44336;
+    --warning-color: #ff9800;
+    --info-color: #2196F3;
+    --light-bg: #ffffff;
+    --dark-bg: #121212;
+    --light-text: #333333;
+    --dark-text: #ffffff;
+    --transition-speed: 0.3s;
+}
+
+/* Light Mode */
+body.light-mode {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+    transition: all var(--transition-speed) ease;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+body.dark-mode .navbar {
+    background-color: #1a1a1a !important;
+}
+
+body.dark-mode .navbar-light .navbar-nav .nav-link {
+    color: var(--dark-text);
+}
+
+body.dark-mode .card {
+    background-color: #1a1a1a;
+    border-color: #333;
+}
+
+body.dark-mode .footer {
+    background-color: #1a1a1a !important;
+}
+
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+main {
+    flex: 1;
+}
+
+/* Cards */
+.card {
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 25px;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #388E3C;
+    border-color: #388E3C;
+}
+
+/* Forms */
+.form-control {
+    border-radius: 10px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    border-color: var(--primary-color);
+}
+
+/* Chat Interface */
+.chat-container {
+    height: 500px;
+    overflow-y: auto;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.chat-message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+.user-message {
+    background-color: var(--primary-color);
+    color: white;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #f1f1f1;
+    color: var(--light-text);
+}
+
+/* Recommendations Steps */
+.step-container {
+    position: relative;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.step-number {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 30px;
+    height: 30px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    .chat-container {
+        height: 400px;
+    }
+    
+    .chat-message {
+        max-width: 90%;
+    }
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #388E3C;
+} 

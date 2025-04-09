@@ -1,0 +1,478 @@
+{% extends "base.html" %}
+
+{% block title %}Health Recommendations{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Main Content Styles */
+    .recommendations-container {
+        padding: 8rem 0 6rem;
+        background: var(--light-color);
+        min-height: 100vh;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 4rem;
+        color: var(--dark-color);
+    }
+
+    .page-title h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .page-title p {
+        font-size: 1.2rem;
+        color: #666;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Card Styles */
+    .recommendation-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .recommendation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1.5rem;
+    }
+
+    .card-icon i {
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--dark-color);
+    }
+
+    .form-control {
+        border: 2px solid #eee;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group-text {
+        background: #f8f9fa;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        color: #666;
+    }
+
+    /* Result Styles */
+    .result-section {
+        display: none;
+        margin-top: 2rem;
+        padding: 2rem;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .result-section.show {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .bmi-value {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .bmi-category {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+    }
+
+    .bmi-description {
+        text-align: center;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .recommendations-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .recommendations-list li {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .recommendations-list li i {
+        margin-right: 1rem;
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+
+    /* Diet Plan Styles */
+    .diet-plan {
+        display: none;
+        margin-top: 2rem;
+    }
+
+    .diet-plan.show {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .meal-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .meal-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+
+    .meal-items {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .meal-items li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .meal-items li:last-child {
+        border-bottom: none;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .recommendations-container {
+            padding: 6rem 0 4rem;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+        }
+
+        .bmi-value {
+            font-size: 2.5rem;
+        }
+
+        .bmi-category {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="recommendations-container">
+    <div class="container">
+        <div class="page-title" data-aos="fade-up">
+            <h1>Your Health Recommendations</h1>
+            <p>Get personalized health insights and recommendations based on your profile</p>
+        </div>
+
+        <div class="row">
+            <!-- BMI Calculator -->
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="recommendation-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h2 class="card-title">BMI Calculator</h2>
+                    </div>
+                    <form id="bmiForm" onsubmit="calculateBMI(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="weight">Weight</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="weight" name="weight" step="0.1" required>
+                                <span class="input-group-text">kg</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="height">Height</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="height" name="height" step="0.01" required>
+                                <span class="input-group-text">m</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-calculator me-2"></i>Calculate BMI
+                        </button>
+                    </form>
+
+                    <div id="bmiResult" class="result-section">
+                        <div class="bmi-value"></div>
+                        <div class="bmi-category"></div>
+                        <div class="bmi-description"></div>
+                        <ul class="recommendations-list">
+                            <!-- Recommendations will be added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diet Plan Generator -->
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="recommendation-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h2 class="card-title">Diet Plan Generator</h2>
+                    </div>
+                    <form id="dietForm" onsubmit="generateDietPlan(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="foodPreference">Food Preference</label>
+                            <select class="form-control" id="foodPreference" name="foodPreference" required>
+                                <option value="">Select your preference</option>
+                                <option value="vegetarian">Vegetarian</option>
+                                <option value="non-vegetarian">Non-Vegetarian</option>
+                                <option value="vegan">Vegan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="dietType">Diet Type</label>
+                            <select class="form-control" id="dietType" name="dietType" required>
+                                <option value="">Select diet type</option>
+                                <option value="weight-loss">Weight Loss</option>
+                                <option value="weight-gain">Weight Gain</option>
+                                <option value="maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-magic me-2"></i>Generate Diet Plan
+                        </button>
+                    </form>
+
+                    <div id="dietPlan" class="diet-plan">
+                        <!-- Diet plan will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function calculateBMI(event) {
+        event.preventDefault();
+        const weight = parseFloat(document.getElementById('weight').value);
+        const height = parseFloat(document.getElementById('height').value);
+        
+        if (weight > 0 && height > 0) {
+            const bmi = weight / (height * height);
+            const resultSection = document.getElementById('bmiResult');
+            const bmiValue = resultSection.querySelector('.bmi-value');
+            const bmiCategory = resultSection.querySelector('.bmi-category');
+            const bmiDescription = resultSection.querySelector('.bmi-description');
+            const recommendationsList = resultSection.querySelector('.recommendations-list');
+            
+            // Display BMI value
+            bmiValue.textContent = bmi.toFixed(1);
+            
+            // Determine BMI category and recommendations
+            let category, description, recommendations;
+            
+            if (bmi < 18.5) {
+                category = 'Underweight';
+                description = 'You are below the healthy weight range. Focus on gaining weight in a healthy way.';
+                recommendations = [
+                    'Increase your caloric intake with nutrient-rich foods',
+                    'Include protein-rich foods in every meal',
+                    'Add healthy fats to your diet',
+                    'Consider strength training exercises'
+                ];
+            } else if (bmi >= 18.5 && bmi < 25) {
+                category = 'Normal Weight';
+                description = 'You are within the healthy weight range. Keep up the good work!';
+                recommendations = [
+                    'Maintain a balanced diet',
+                    'Regular exercise for 30 minutes daily',
+                    'Stay hydrated',
+                    'Get adequate sleep'
+                ];
+            } else if (bmi >= 25 && bmi < 30) {
+                category = 'Overweight';
+                description = 'You are above the healthy weight range. Consider making lifestyle changes.';
+                recommendations = [
+                    'Monitor your caloric intake',
+                    'Increase physical activity',
+                    'Choose whole foods over processed foods',
+                    'Practice portion control'
+                ];
+            } else {
+                category = 'Obese';
+                description = 'Your weight is significantly above the healthy range. Consider consulting a healthcare professional.';
+                recommendations = [
+                    'Consult with a healthcare provider',
+                    'Start with low-impact exercises',
+                    'Focus on whole, unprocessed foods',
+                    'Set realistic weight loss goals'
+                ];
+            }
+            
+            bmiCategory.textContent = category;
+            bmiDescription.textContent = description;
+            
+            // Add recommendations
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <li><i class="fas fa-check-circle"></i>${rec}</li>
+            `).join('');
+            
+            // Show result section with animation
+            resultSection.classList.add('show');
+        }
+    }
+
+    function generateDietPlan(event) {
+        event.preventDefault();
+        const foodPreference = document.getElementById('foodPreference').value;
+        const dietType = document.getElementById('dietType').value;
+        const dietPlanSection = document.getElementById('dietPlan');
+        
+        // Sample diet plan structure
+        const meals = {
+            breakfast: {
+                vegetarian: ['Oatmeal with fruits', 'Greek yogurt with honey', 'Whole grain toast'],
+                'non-vegetarian': ['Scrambled eggs', 'Turkey bacon', 'Whole grain toast'],
+                vegan: ['Smoothie bowl', 'Chia seeds pudding', 'Almond milk']
+            },
+            lunch: {
+                vegetarian: ['Quinoa salad', 'Grilled vegetables', 'Hummus'],
+                'non-vegetarian': ['Grilled chicken breast', 'Brown rice', 'Steamed vegetables'],
+                vegan: ['Buddha bowl', 'Chickpea curry', 'Brown rice']
+            },
+            dinner: {
+                vegetarian: ['Lentil soup', 'Mixed vegetables', 'Brown rice'],
+                'non-vegetarian': ['Baked salmon', 'Sweet potato', 'Green beans'],
+                vegan: ['Tofu stir-fry', 'Quinoa', 'Roasted vegetables']
+            },
+            snacks: {
+                vegetarian: ['Mixed nuts', 'Fresh fruits', 'Yogurt'],
+                'non-vegetarian': ['Protein shake', 'Mixed nuts', 'Hard-boiled eggs'],
+                vegan: ['Trail mix', 'Fresh fruits', 'Vegetable sticks']
+            }
+        };
+        
+        // Generate diet plan HTML
+        const dietPlanHTML = `
+            <h3 class="mt-4 mb-3">Your Personalized Diet Plan</h3>
+            <div class="meal-card">
+                <div class="meal-title"><i class="fas fa-sun me-2"></i>Breakfast</div>
+                <ul class="meal-items">
+                    ${meals.breakfast[foodPreference].map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="meal-card">
+                <div class="meal-title"><i class="fas fa-cloud-sun me-2"></i>Lunch</div>
+                <ul class="meal-items">
+                    ${meals.lunch[foodPreference].map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="meal-card">
+                <div class="meal-title"><i class="fas fa-moon me-2"></i>Dinner</div>
+                <ul class="meal-items">
+                    ${meals.dinner[foodPreference].map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
+            <div class="meal-card">
+                <div class="meal-title"><i class="fas fa-cookie-bite me-2"></i>Snacks</div>
+                <ul class="meal-items">
+                    ${meals.snacks[foodPreference].map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+        
+        dietPlanSection.innerHTML = dietPlanHTML;
+        dietPlanSection.classList.add('show');
+    }
+</script>
+{% endblock %} 

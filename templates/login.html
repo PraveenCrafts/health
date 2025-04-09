@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .login-section {
+        min-height: 100vh;
+        padding: 8rem 0 6rem;
+        background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(255, 20, 147, 0.1));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-section::before {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDEwNSwgMTgwLCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=');
+        opacity: 0.5;
+        animation: slide 20s linear infinite;
+    }
+
+    @keyframes slide {
+        0% { transform: translateY(0) rotate(0deg); }
+        100% { transform: translateY(-50%) rotate(5deg); }
+    }
+
+    .login-container {
+        max-width: 450px;
+        width: 90%;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        box-shadow: 0 15px 35px rgba(255, 105, 180, 0.2);
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 0.6s ease forwards;
+    }
+
+    @keyframes slideUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .login-header h2 {
+        color: var(--dark-color);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .login-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid #eee;
+        border-radius: 15px;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(255, 105, 180, 0.25);
+        background: white;
+    }
+
+    .form-label {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        padding: 0 0.5rem;
+        color: #666;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        background: transparent;
+    }
+
+    .form-control:focus + .form-label,
+    .form-control:not(:placeholder-shown) + .form-label {
+        top: -0.5rem;
+        left: 0.8rem;
+        font-size: 0.8rem;
+        color: var(--primary-color);
+        background: white;
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-group-text {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .input-group-text:hover {
+        color: var(--primary-color);
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-login::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transform: translateX(-100%);
+    }
+
+    .btn-login:hover::after {
+        animation: shine 1.5s ease;
+    }
+
+    @keyframes shine {
+        100% { transform: translateX(100%); }
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .login-footer p {
+        color: #666;
+        margin-bottom: 0;
+    }
+
+    .login-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .login-footer a:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .login-section {
+            padding: 6rem 1rem;
+        }
+
+        .login-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="login-section">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>Welcome Back</h2>
+                <p>Sign in to continue your health journey</p>
+            </div>
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="email" class="form-control" id="email" name="email" placeholder=" " required>
+                        <label class="form-label" for="email">Email address</label>
+                        <span class="input-group-text">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" placeholder=" " required>
+                        <label class="form-label" for="password">Password</label>
+                        <span class="input-group-text toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </button>
+            </form>
+            <div class="login-footer">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Create one now</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.querySelector('.toggle-password i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+</script>
+{% endblock %} 
