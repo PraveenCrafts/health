@@ -1,3 +1,4 @@
+## project done  by : T.Praveen Kumar Reddy
 # Healthy Living - AI-Powered Health & Fitness Platform
 
 A modern, AI-powered health and fitness website that provides personalized recommendations using the Gemini API. The platform features a chatbot for health-related queries and a step-by-step recommendation system for personalized diet plans.
